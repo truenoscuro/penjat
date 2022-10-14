@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<script>
+   
+    function Paraula( lletres){
+        this.lletres = lletres;
+
+    }
+
+    function Lletra(lletra){
+        this.lletra = lletra; 
+        this.seleccionat = false;
+
+    }
+
+    function Penjat(){
+       
+        this.lletres = [];
+        this.imatge = 1;
+
+        
+        this.init= function (){
+            this.pinta();
+            var lletres = "abcdefghijklmnopqrstuvwxyzñçàáéèíóòú";
+            for( var lletra of lletres ) this.lletres.push(new Lletra(lletra));
+        }
+       
+        this.pinta = function(){
+            var script = document.querySelector("body").innerHTML;
+            document.querySelector("body").innerHTML = `<img src="img/${this.imatge}.PNG" alt="Penjat"> ${script}`
+        }
+    }
+
+var penjat = new Penjat();
+penjat.init();
+</script>
+</body>
+</html>

@@ -49,66 +49,67 @@
             var paraula = new Paraula;
             paraula.init(this.lletres);
             this.paraulaSelect = paraula.lletres;
+            this.initPinta();
             this.pinta();
         }
-       
-        this.pinta = function(){
+        this.initPinta = function (){
             var script = document.querySelector("body").innerHTML;
-            var html = `<img src="img/${this.imatge}.PNG" alt="Penjat">`
-            
-            for (var lletra of this.paraulaSelect) html+=lletra.pinta();
-            document.querySelector("body").innerHTML = html + script
-            /*
-            for( var lletra of this.lletres ) {
-                var id = lletra.id
-                html += `<button class = "${id}">${ lletra.lletra } </button>`
-                document.querySelector("."+id).addEventListener("click",this.play( lletra ))
-            }
-            */
+            var img = "<div class ='img'></div>";
+            var paraula = "<div class = 'paraula'></div>"
+            var lletres = "<h1 class = 'lletres'></h1>"
+            document.querySelector("body").innerHTML = img+paraula+lletres+script;
+
             for( var lletra of this.lletres ) {
                 var boto = document.createElement("button");
-                boto.addEventListener("click",this.boto)
+                boto.addEventListener("click",this.jugar)
                 boto.innerHTML = lletra.lletra;
                 boto.lletra = lletra;
-                document.querySelector("body").appendChild(boto);
+                document.querySelector(".lletres").appendChild(boto);
             }
-           
-            
         }
-        this.boto = function( evt ){
+
+        this.pinta = function(){
+            
+            document.querySelector(".img").innerHTML =`<img src="img/${this.imatge}.PNG" alt="Penjat">`
+            var html = "";
+            for (var lletra of this.paraulaSelect) html+=lletra.pinta();
+            document.querySelector(".paraula").innerHTML = html;
+    
+        }
+        
+        this.jugar = function( evt ){
+            //letra desaparaeix em de canvia a lletres
             var lletra = evt.currentTarget.lletra ;
             lletra.esAgafada = true;
+            var conteLletra = false;
             for (var lls of this.paraulaSelect){
-                if( lls.lletra === lletra.lletra ) return 
+                if( lls.lletra === lletra.lletra ) conteLletra = true; 
             }
-            this.imatge++;
+            if(!conteLletra) this.imatge++;
+            if(this.esMort()) console.log("Ha perdut")
+            if(this.esDescoberta()) console.log("HA guanyat")
+            this.pinta();
         }.bind(this);
+
+
         this.esMort = function (){
-            if (this.imatge == 7) return true;
-            return false;
+            return this.imatge == 7;
         }
+
         this.esDescoberta = function() {
             var cont = 0;
             for (var lletra of this.paraulaSelect){
                 if(lletra.esAgafada ) cont++
             }
-            if (cont == this.paraulaSelect) return true;
-            return false;
+            return cont === this.paraulaSelect.length;
         }
-        this.play = function (){
-            console.log("Jugar");
-            while(!this.esMort){
-                if(this.esDescoberta)  return console.log("EM guanyat")
-                this.pinta()
-            }
-            console.log("Em acabat")
-        }
+    
+       
 
     }
 
 var penjat = new Penjat();
 penjat.init();
-penjat.play();
 </script>
 </body>
 </html>

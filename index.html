@@ -10,37 +10,105 @@
     
 <script>
    
-    function Paraula( lletres){
-        this.lletres = lletres;
-
+    function Paraula( ){
+        this.seleccionada ;
+        this.lletres = [];
+        this.init = function ( lletres ){
+            var paraules = ["windows","mac","linux"];
+            this.seleccionada = paraules[Math.floor(Math.random()*paraules.length)]
+            for (var lls of this.seleccionada)
+                for (var ll of lletres)
+                    if(lls === ll.lletra) this.lletres.push(ll)
+        
+        }   
     }
 
-    function Lletra(lletra){
+    function Lletra( lletra ){
+    
         this.lletra = lletra; 
-        this.seleccionat = false;
-
+        this.esAgafada = false;
+        
+        this.pinta = function (){
+            if (this.esAgafada) return this.lletra;
+            return " _ ";
+        }
     }
 
     function Penjat(){
        
         this.lletres = [];
         this.imatge = 1;
-
-        
+        this.paraulaSelect;
         this.init= function (){
-            this.pinta();
+            
             var lletres = "abcdefghijklmnopqrstuvwxyzñçàáéèíóòú";
-            for( var lletra of lletres ) this.lletres.push(new Lletra(lletra));
+           
+            for( var lletra of lletres ) {
+                this.lletres.push(new Lletra(lletra));
+            }
+            var paraula = new Paraula;
+            paraula.init(this.lletres);
+            this.paraulaSelect = paraula.lletres;
+            this.pinta();
         }
        
         this.pinta = function(){
             var script = document.querySelector("body").innerHTML;
-            document.querySelector("body").innerHTML = `<img src="img/${this.imatge}.PNG" alt="Penjat"> ${script}`
+            var html = `<img src="img/${this.imatge}.PNG" alt="Penjat">`
+            
+            for (var lletra of this.paraulaSelect) html+=lletra.pinta();
+            document.querySelector("body").innerHTML = html + script
+            /*
+            for( var lletra of this.lletres ) {
+                var id = lletra.id
+                html += `<button class = "${id}">${ lletra.lletra } </button>`
+                document.querySelector("."+id).addEventListener("click",this.play( lletra ))
+            }
+            */
+            for( var lletra of this.lletres ) {
+                var boto = document.createElement("button");
+                boto.addEventListener("click",this.boto)
+                boto.innerHTML = lletra.lletra;
+                boto.lletra = lletra;
+                document.querySelector("body").appendChild(boto);
+            }
+           
+            
         }
+        this.boto = function( evt ){
+            var lletra = evt.currentTarget.lletra ;
+            lletra.esAgafada = true;
+            for (var lls of this.paraulaSelect){
+                if( lls.lletra === lletra.lletra ) return 
+            }
+            this.imatge++;
+        }.bind(this);
+        this.esMort = function (){
+            if (this.imatge == 7) return true;
+            return false;
+        }
+        this.esDescoberta = function() {
+            var cont = 0;
+            for (var lletra of this.paraulaSelect){
+                if(lletra.esAgafada ) cont++
+            }
+            if (cont == this.paraulaSelect) return true;
+            return false;
+        }
+        this.play = function (){
+            console.log("Jugar");
+            while(!this.esMort){
+                if(this.esDescoberta)  return console.log("EM guanyat")
+                this.pinta()
+            }
+            console.log("Em acabat")
+        }
+
     }
 
 var penjat = new Penjat();
 penjat.init();
+penjat.play();
 </script>
 </body>
 </html>

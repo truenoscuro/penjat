@@ -11,16 +11,20 @@
 <script>
    
     function Paraula( ){
+        
         this.seleccionada ;
         this.lletres = [];
+        
         this.init = function ( lletres ){
             var paraules = ["windows","mac","linux"];
             this.seleccionada = paraules[Math.floor(Math.random()*paraules.length)]
+            
             for (var lls of this.seleccionada)
                 for (var ll of lletres)
                     if(lls === ll.lletra) this.lletres.push(ll)
         
-        }   
+        }
+
     }
 
     function Lletra( lletra ){
@@ -32,6 +36,7 @@
             if (this.esAgafada) return this.lletra;
             return " _ ";
         }
+
     }
 
     function Penjat(){
@@ -46,18 +51,23 @@
             for( var lletra of lletres ) {
                 this.lletres.push(new Lletra(lletra));
             }
+
             var paraula = new Paraula;
             paraula.init(this.lletres);
             this.paraulaSelect = paraula.lletres;
+
             this.initPinta();
             this.pinta();
+
         }
         this.initPinta = function (){
+            
             var script = document.querySelector("body").innerHTML;
-            var img = "<div class ='img'></div>";
+            var img = `<img src="img/${this.imatge}.PNG" alt="Penjat" class = "img">`;
             var paraula = "<div class = 'paraula'></div>"
             var lletres = "<h1 class = 'lletres'></h1>"
-            document.querySelector("body").innerHTML = img+paraula+lletres+script;
+            document.querySelector("body").innerHTML = img + paraula + lletres +script;
+            
 
             for( var lletra of this.lletres ) {
                 var boto = document.createElement("button");
@@ -66,42 +76,48 @@
                 boto.lletra = lletra;
                 document.querySelector(".lletres").appendChild(boto);
             }
+            
         }
 
         this.pinta = function(){
             
-            document.querySelector(".img").innerHTML =`<img src="img/${this.imatge}.PNG" alt="Penjat">`
+            document.querySelector(".img").src =`img/${this.imatge}.PNG` 
+            
             var html = "";
             for (var lletra of this.paraulaSelect) html+=lletra.pinta();
             document.querySelector(".paraula").innerHTML = html;
-    
+
         }
         
         this.jugar = function( evt ){
-            //letra desaparaeix em de canvia a lletres
+            
             var lletra = evt.currentTarget.lletra ;
             lletra.esAgafada = true;
+            
             var conteLletra = false;
-            for (var lls of this.paraulaSelect){
+
+            for (var lls of this.paraulaSelect)
                 if( lls.lletra === lletra.lletra ) conteLletra = true; 
-            }
-            if(!conteLletra) this.imatge++;
+            
+            if(!conteLletra && this.imatge<7) this.imatge++;
             if(this.esMort()) console.log("Ha perdut")
             if(this.esDescoberta()) console.log("HA guanyat")
+            
             this.pinta();
+
         }.bind(this);
 
 
-        this.esMort = function (){
-            return this.imatge == 7;
-        }
+        this.esMort = function (){ return this.imatge == 7; }
 
         this.esDescoberta = function() {
+            
             var cont = 0;
             for (var lletra of this.paraulaSelect)
                 if(lletra.esAgafada ) cont++
             
             return cont === this.paraulaSelect.length;
+
         }
     
        

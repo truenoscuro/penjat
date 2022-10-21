@@ -48,10 +48,9 @@
             
             var lletres = "abcdefghijklmnopqrstuvwxyzñçàáéèíóòú";
            
-            for( var lletra of lletres ) {
+            for( var lletra of lletres ) 
                 this.lletres.push(new Lletra(lletra));
-            }
-
+           
             var paraula = new Paraula;
             paraula.init(this.lletres);
             this.paraulaSelect = paraula.lletres;

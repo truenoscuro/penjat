@@ -98,9 +98,9 @@
 
         this.esDescoberta = function() {
             var cont = 0;
-            for (var lletra of this.paraulaSelect){
+            for (var lletra of this.paraulaSelect)
                 if(lletra.esAgafada ) cont++
-            }
+            
             return cont === this.paraulaSelect.length;
         }
     
